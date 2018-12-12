@@ -5,6 +5,7 @@ var contents = fs.readFileSync('./input.txt', 'utf8').toString().split('\r\n');
 var initState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
 //
 var newState = initState;
+var newStateb = initState;
 
 var rules = contents.slice(2)
     .map(v => {
@@ -25,6 +26,8 @@ for (i = 3; i < initState.length-3; i++){
     rules.forEach((rule) => {
         if (tempStr == rule.match){
             console.log(`${tempStr} - ${rule.match}; ${i}`);
+            newStateb[i] = rule.output;
+            console.log(rule.match, newStateb[i]);
         }
     });
 }
