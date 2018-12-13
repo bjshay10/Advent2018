@@ -27,7 +27,9 @@ for (i = 3; i < initState.length-3; i++){
         if (tempStr == rule.match){
             console.log(`${tempStr} - ${rule.match}; ${i}`);
             newStateb[i] = rule.output;
-            console.log(rule.match, newStateb[i]);
+            console.log(newState);
+            console.log(newStateb);
+
         }
     });
 }
