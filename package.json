@@ -9,6 +9,7 @@
   "author": "B.J. Shay",
   "license": "ISC",
   "dependencies": {
-    "double-ended-queue": "^2.1.0-0"
+    "double-ended-queue": "^2.1.0-0",
+    "priorityqueuejs": "^1.0.0"
   }
 }
