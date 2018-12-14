@@ -70,23 +70,23 @@ do {
     if (chkLength > newScore.length){
         var tempe2 = (e2ToMove + e2CurrIndx) % newScore.length;
         //make sure recipe isn't being used by e1
-        if (tempe2 === e1CurrIndx){
-            tempe2++;
-        }
+        // if (tempe2 === e1CurrIndx){
+        //     tempe2++;
+        // }
         e2CurrIndx   = tempe2;
         e2 = newScore.substring(tempe2,tempe2+1);
     } else if (chkLength == newScore.length){
             var tempe2 = 0;
-            if (tempe2 === e1CurrIndx){
-                tempe2++;
-            }
+            // if (tempe2 === e1CurrIndx){
+            //     tempe2++;
+            // }
             e2 = newScore.substring(tempe2, tempe2 + 1);
             e1CurrIndx = tempe2;
     } else {
         var tempe2 = e2ToMove + e2CurrIndx;
-        if (tempe2 === e1CurrIndx){
-            tempe2++;
-        }
+        // if (tempe2 === e1CurrIndx){
+        //     tempe2++;
+        // }
         e2 = newScore.substring(tempe2, tempe2 + 1);
         e2CurrIndx = tempe2;
     }
@@ -95,11 +95,11 @@ do {
 
     // newCnt = 10;
     
-} while (newCnt < 909451);
-// } while (newCnt < 15);
+// } while (newCnt < 909451);
+} while (newCnt < 2028);
 
 
-console.log(newScore.substring(909441, 909451));
+console.log(newScore.substring(2018, 2028));
 
 
 // move to the next recipe rToMove = Number of recipes to mov
