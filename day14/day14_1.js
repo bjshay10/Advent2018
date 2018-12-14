@@ -95,11 +95,11 @@ do {
 
     // newCnt = 10;
     
-// } while (newCnt < 909441);
-} while (newCnt < 15);
+} while (newCnt < 909451);
+// } while (newCnt < 15);
 
 
-console.log(newScore.substring(5, 15));
+console.log(newScore.substring(909441, 909451));
 
 
 // move to the next recipe rToMove = Number of recipes to mov
