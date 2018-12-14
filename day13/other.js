@@ -1,132 +1,209 @@
-const PriorityQueue = require('priorityqueuejs');
+const fs = require('fs').promises;
 
+let readInput = async () => {
+    let res = await fs.readFile('./input.txt');
+    // let res = await fs.readFile('./input_test.txt');
+    let inputs = res.toString().split('\n');
+    return inputs
+}
 
-const SIZE = 150;
-const grid = new Array(SIZE * SIZE);
-const getPosition = ({x, y}) => grid[y * SIZE + x];
-const setPosition = (x, y, val) => (grid[y * SIZE + x] = val);
-
-const cars = new PriorityQueue((a, b) => {
-  if (b.y !== a.y) return b.y - a.y;
-  return b.x - a.x;
-});
-const [push, pop, peek, len] = ['enq', 'deq', 'peek', 'size'].map(fnName =>
-  cars[fnName].bind(cars)
-);
-
-const turn = left => {
-  const [a, b] = left ? ['x', 'y'] : ['y', 'x'];
-  return car => {
-    const multiplier = car.direction[a] === 0 ? 1 : -1;
-    car.direction = {
-      [a]: car.direction[b],
-      [b]: car.direction[a] * multiplier,
-    };
-    return car;
-  };
-};
-const [turnLeft, turnRight] = [true, false].map(turn);
-
-const intructions = {
-  '+': car => {
-    const direction = ++car.turns % 3;
-    if (direction === 1) return car;
-    if (direction === 0) return turnLeft(car);
-    return turnRight(car);
-  },
-  '\\': car => (car.direction.x === 0 ? turnLeft : turnRight)(car),
-  '/': car => (car.direction.x === 0 ? turnRight : turnLeft)(car),
-};
-
-const moveCar = car => {
-  car.x += car.direction.x;
-  car.y += car.direction.y;
-
-  const instruction = getPosition(car);
-  return instruction === null ? car : intructions[instruction](car);
-};
-
-const move = () => {
-  const nCars = len();
-  const nextCars = new Array(nCars);
-
-  for (let i = 0; i < nCars; i++) nextCars[i] = moveCar(pop());
-  nextCars.forEach(push);
-};
-
-const removeCrashes = () => {
-  const nCars = len();
-  const allCars = new Array(nCars);
-  const alive = [];
-
-  allCars[0] = pop();
-  for (let i = 1; i < nCars; i++) {
-    allCars[i] = pop();
-    if (
-      allCars[i].x !== allCars[i - 1].x ||
-      allCars[i].y !== allCars[i - 1].y
-    ) {
-      alive.push(allCars[i]);
+print = (grid) => {
+    for (let i = 0; i < grid.length; i++) {
+        console.log(grid[i].join(''));
     }
-  }
-  if (allCars[0].x !== allCars[1].x || allCars[0].y !== allCars[1].y) {
-    alive.push(allCars[0]);
-  }
-  alive.forEach(push);
-};
+}
 
-const findFirstCrash = () => {
-  const nCars = len();
-  let prevCar = {x: -1, y: -1};
-  const newCars = [];
+let move = (cart, grid) => {
+    let nextTurns = ['ccw', 's', 'cw'];
 
-  for (let i = 0; i < nCars; i++) {
-    newCars[i] = pop();
-    if (newCars[i].x === prevCar.x && newCars[i].y === prevCar.y) {
-      return prevCar;
+    let [x, y] = [cart.x, cart.y];
+    if (cart.d === 'u') {
+        // console.log(`up for ${cart.x}, ${cart.y}`);
+        cart.y = cart.y - 1;
+        let nextTrack = grid[y - 1][x];
+        if (nextTrack === '/') {
+            cart.d = 'r';
+        } else if (nextTrack === '\\') {
+            cart.d = 'l';
+        } else if (nextTrack === '+') {
+            if (cart.n === 'cw') {
+                cart.d = 'r';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 'ccw') {
+                cart.d = 'l';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 's') {
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            }
+        } else if (nextTrack === '-') {
+            throw new Error(`wrong direction, cart ${cart.x}, ${cart.y} going ${cart.d}`);
+        }
     }
-    prevCar = newCars[i];
-  }
-  newCars.forEach(push);
-  return null;
-};
+    else if (cart.d === 'd') {
+        cart.y = cart.y + 1;
+        let nextTrack = grid[y + 1][x];
+        if (nextTrack === '/') {
+            cart.d = 'l';
+        } else if (nextTrack === '\\') {
+            cart.d = 'r';
+        } else if (nextTrack === '+') {
+            if (cart.n === 'cw') {
+                cart.d = 'l';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 'ccw') {
+                cart.d = 'r';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 's') {
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            }
+        } else if (nextTrack === '-') {
+            throw new Error(`wrong direction, cart ${cart.x}, ${cart.y} going ${cart.d}`);
+        }
+    }
+    else if (cart.d === 'l') {
+        cart.x = cart.x - 1;
+        let nextTrack = grid[y][x - 1];
+        if (nextTrack === '/') {
+            cart.d = 'd';
+        } else if (nextTrack === '\\') {
+            cart.d = 'u';
+        } else if (nextTrack === '+') {
+            if (cart.n === 'cw') {
+                cart.d = 'u';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 'ccw') {
+                cart.d = 'd';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 's') {
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            }
+        } else if (nextTrack === '|') {
+            throw new Error(`wrong direction, cart ${cart.x}, ${cart.y} going ${cart.d}`);
+        }
+    }
+    else if (cart.d === 'r') {
+        cart.x = cart.x + 1;
+        let nextTrack = grid[y][x + 1];
+        if (nextTrack === '/') {
+            cart.d = 'u';
+        } else if (nextTrack === '\\') {
+            cart.d = 'd';
+        } else if (nextTrack === '+') {
+            if (cart.n === 'cw') {
+                cart.d = 'd';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 'ccw') {
+                cart.d = 'u';
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            } else if (cart.n === 's') {
+                cart.n = nextTurns[(nextTurns.indexOf(cart.n) + 1) % 3];
+            }
+        } else if (nextTrack === '|') {
+            throw new Error(`wrong direction, cart ${cart.x}, ${cart.y} going ${cart.d}`);
+        }
+    }
+    return cart;
+}
 
-const directions = {
-  '^': {x: 0, y: -1},
-  v: {x: 0, y: 1},
-  '>': {x: 1, y: 0},
-  '<': {x: -1, y: 0},
-};
-const processInput = lines =>
-  lines.forEach((line, y) =>
-    line.split('').forEach((val, x) => {
-      if (val === '|' || val === '-') return setPosition(x, y, null);
+initializeGrid = (inputs) => {
+    let h = inputs.length;
+    let w = inputs[0].length;
+    console.log(`Working ${w} x ${h} grid`);
 
-      const direction = directions[val];
-      if (!direction) return setPosition(x, y, val);
+    let grid = [];
+    let carts = [];
+    for (let i = 0; i < h; i++) {
+        grid[i] = [];
+    }
 
-      push({x, y, turns: -1, direction});
-      setPosition(x, y, null);
-    })
-  );
+    // Directions: l, r, u, d
+    // Direction of Next turn: ccw, s, cw
+    // cart = {x, y, d, l}
+    for (let i = 0; i < h; i++) {
+        for (let j = 0; j < w; j++) {
+            // |- /\ <>^v
+            if (inputs[i][j] === '<' || inputs[i][j] === '>') {
+                grid[i][j] = '-';
+                if (inputs[i][j] === '<') {
+                    let cart = { x: j, y: i, d: 'l', n: 'ccw' }
+                    carts.push(cart);
+                } else {
+                    let cart = { x: j, y: i, d: 'r', n: 'ccw' }
+                    carts.push(cart);
+                }
+            } else if (inputs[i][j] === '^' || inputs[i][j] === 'v') {
+                grid[i][j] = '|';
+                if (inputs[i][j] === '^') {
+                    let cart = { x: j, y: i, d: 'u', n: 'ccw' }
+                    carts.push(cart);
+                } else {
+                    let cart = { x: j, y: i, d: 'd', n: 'ccw' }
+                    carts.push(cart);
+                }
+            } else {
+                grid[i][j] = inputs[i][j];
+            }
+        }
+    }
 
-const solution1 = lines => {
-  processInput(lines);
-  let firstCrash;
-  do {
-    move();
-    firstCrash = findFirstCrash();
-  } while (firstCrash === null);
-  return [firstCrash.x, firstCrash.y].join(',');
-};
+    return [grid, carts];
+}
 
-const solution2 = lines => {
-  processInput(lines);
-  do {
-    move();
-    removeCrashes();
-  } while (len() > 1);
-  return [peek().x, peek().y].join(',');
-};
+let collision = (carts) => {
+    let x = -1;
+    let y = -1;
 
-module.exports = [solution1, solution2];
+    for (let i = carts.length - 1; i >= 0; i--) {
+        let currentCart = carts[i];
+        let index = carts.findIndex((cart) => {
+            return cart.x === currentCart.x && cart.y === currentCart.y;
+        });
+        if (index !== i) {
+            return [currentCart.x, currentCart.y]
+        }
+    }
+    return [x, y];
+}
+
+let main = async () => {
+    let inputs = (await readInput());
+    let [grid, carts] = initializeGrid(inputs);
+
+    print(grid);
+    console.log(carts);
+
+    let orderedCarts = carts.slice().sort((c1, c2) => {
+        if (c1.y !== c2.y) {
+            return c1.y - c2.y;
+        }
+        return c1.x - c2.x;
+    });
+
+    console.log(orderedCarts);
+    while (true) {
+        for (let cart of orderedCarts) {
+            cart = move(cart, grid);
+            let [x, y] = collision(orderedCarts);
+            if (x > -1) {
+                console.log(`Crash! ${x}, ${y}`);
+                orderedCarts = orderedCarts.filter(cart => {
+                    return cart.x !== x || cart.y !== y;
+                })
+            }
+        }
+        if (orderedCarts.length === 1) {
+            console.log(orderedCarts[0].x, orderedCarts[0].y);
+            return;
+        }
+        orderedCarts.sort((c1, c2) => {
+            if (c1.y !== c2.y) {
+                return c1.y - c2.y;
+            }
+            return c1.x - c2.x;
+        });
+
+    }
+}
+
+
+main();
