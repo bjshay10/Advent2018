@@ -34,106 +34,85 @@ console.log(array);
 for (r = 0;  r < array[0].length; r++){
     //loop columns
     for (c = 0; c < array.length; c++) {
-        cntEmpty = 0;
-        cntWood = 0;
-        cntLumber = 0;
-        
-        if ((r-1 === -1) || (c-1 === -1)) {
-            // console.log(`cell outside array - ignore cell ${r-1} or ${c-1}`);
-            continue;
-        } else if ((r+1 > array[0].length) || (c+1 > array.length)) {
-            // console.log(`cell outside array - ignore cell ${r+1} or ${c+1}`);
-            continue;
-        } else {
-            // -1, -1
-            if (array[r-1][c-1] == '.'){
-                cntEmpty++;
-            } else if (array[r-1][c-1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
+        // top row
+        if (r === 0) {
+            //left side
+            if (c === 0) {
+                //to right i,j+1
+                //to bottom i+1,j
+                //to lower right diag i+1,j+1
+            //not left or right 
+            } else if ((c != 0) && (c < array[0].length - 1)){
+                //left
+                //left diag down
+                //bottom
+                //right diag down
+                //right
+            // right
+            } else if (c = array[0].length - 1) {
+                //left
+                //left diag down
+                //bottom
             }
-            // -1, 0
-            if (array[r-1][c] == '.'){
-                cntEmpty++;
-            } else if (array[r-1][c] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
+        // not top or bottom row
+        } else if ((r < 0) && (r < array.length -1)) {
+            //if left side
+            if (c === 0){
+                //top
+                //right diag up
+                //right
+                //right diag down
+                //bottom
+            //any
+            } else if ((c != 0) && ( c < array[0].length - 1)) {
+                //left diag up
+                //top
+                //right diag up
+                //left
+                //right
+                //left diag down
+                //bottom
+                //right diag down
+            //right side
+            } else if (c === array[0].length - 1) {
+                //left diag up
+                //top
+                //left
+                //left diag down
+                //bottom
+            }            
+        //bottom row
+        } else if (r === array.length -1) {
+            //left
+            if (c === 0) {
+                //top
+                //right diag up
+                //right
+            //center
+            } else if ((c != 0) && (c < array[0].length -1)){
+                //left
+                //left diag up
+                //top
+                //right diag up
+                //right
+            //right    
+            } else if (c === array[0].length) {
+                //left
+                //left diag up
+                //top
             }
-            // -1, 1
-            if (array[r-1][c+1] == '.'){
-                cntEmpty++;
-            } else if (array[r-1][c+1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-            // 0, -1
-            if (array[r][c-1] == '.'){
-                cntEmpty++;
-            } else if (array[r][c-1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-            // 0, 1
-            if (array[r][c+1] == '.'){
-                cntEmpty++;
-            } else if (array[r][c+1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-            // 1, -1
-            if (array[r+1][c-1] == '.'){
-                cntEmpty++;
-            } else if (array[r+1][c+1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-            // 1, 0
-            if (array[r+1][c] == '.'){
-                cntEmpty++;
-            } else if (array[r+1][c] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-            // 1, 1
-            if (array[r+1][c+1] == '.'){
-                cntEmpty++;
-            } else if (array[r+1][c+1] == '|'){
-                cntWood++;
-            } else {
-                cntLumber++;
-            }
-        }
-
-        console.log('-', cntEmpty);
-
-        if (cntEmpty > 2) {
-            array[r][c] = '.';
-        }
-        if (cntWood > 2) {
-            array[r][c] = '|';
-        }
-        if (cntLumber > 2) {
-            array[r][c] = '#';
+            
         }
     }
 }
 console.log(array);
 
-
-//display final?
-//console.log(array);
-
-// An open acre will become filled with trees if three or more adjacent acres contained trees. Otherwise, nothing happens.
-// An acre filled with trees will become a lumberyard if three or more adjacent acres were lumberyards. Otherwise, nothing happens.
-// An acre containing a lumberyard will remain a lumberyard if it was adjacent to at least one other lumberyard and at least one acre containing trees. Otherwise, it becomes open.
-
-//check open acre
-//check trees acre
-//check lumberyard acres
+function countChar(char) {
+    if (char == '.') {
+        cntEmpty++;
+    } else if (char == '|') {
+        cntWood++;
+    } else {
+        cntLumber++;
+    }
+}
