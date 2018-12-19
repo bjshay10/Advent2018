@@ -33,7 +33,7 @@ const ops = [
   }
   let opcode = 0
   
-  for (const line of require('fs').readFileSync('input.txt', 'utf8').trimEnd().split('\n')) {
+  for (const line of require('fs').readFileSync('inputWhole.txt', 'utf8').trimEnd().split('\n')) {
     let m = line.match(/Before: \[(\d+), (\d+), (\d+), (\d+)\]/)
     if (m) {
       r = m.slice(1).map(n => Number(n))
