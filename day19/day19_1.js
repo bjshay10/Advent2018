@@ -18,27 +18,19 @@ ip = parseInt(m[1]);
 //increase ip to correct instruction pointer
 ip++;
 
-//loop through contents starting at i(instructionPointer)
-for (ip; ip < contents.length; ip++){
+// //loop through contents starting at i(instructionPointer)
+// for (ip; ip < contents.length; ip++){
 
-    var instruction = contents[ip].toString().split(' ');
-    console.log(instruction);
+//     var instruction = contents[ip].toString().split(' ');
+//     console.log(instruction);
 
-    //use instruction[0] to get instruction type addi, seti, etc.
-    switch (instruction[0]) {
-        case 'seti': 
-            //set register(ip) to ip value
-            ip = ip + 1;
-            //set register 1 to instruction [1]
-            r1 = instruction[1];
-            ip = instruction[2]+1;
-            r0 = ip;
-            register.push([r0,r1,r2,r3,r4,r5]);
-            break;
-        default: console.log(`default`);
+//     //use instruction[0] to get instruction type addi, seti, etc.
+//     switch (instruction[0]) {
+//         case 'seti': 
+//         default: console.log(`default`);
             
-    } 
+//     } 
 
-}
+// }
 
 
