@@ -1,15 +1,14 @@
 const fs = require('fs');
 
-var contents = fs.readFileSync('input.txt', 'utf-8').split('\r\n');
+var contents = fs.readFileSync('input.txt', 'utf-8').split('\r\n')
+    .map(v => {
+        let match = v.match(/pos=<(-?\d+),(-?\d+),(-?\d+)>, r=(-?\d+)/);
+        return {
+            x: parseInt(match[1],10),
+            y: parseInt(match[2],10),
+            z: parseInt(match[3],10),
+            r: parseInt(match[3],10)
+        }
+    });
 
-contents.forEach((content) => {
-    var m = content.match(/pos=<\d+,\d+,\d+>/);
-    //pos=<59967821,55658391,55390188>, r=59056277
-    if (m) {
-        console.log(m.toString().replace('pos=','').replace('<','').replace('>','').split(','));
-    }
-    var r = content.match(/r=\d+/);
-    if (r) {
-        console.log(r.toString().replace('r=',''));
-    }
-});
+console.log(contents);
