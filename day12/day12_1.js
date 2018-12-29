@@ -4,10 +4,10 @@ var contents = fs.readFileSync('./input_test.txt', 'utf8').toString().split('\r\
 
 var initState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
 // var initState = contents[0].replace('initial state: ','').split('');
-var changedState = initState;
+var changedState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
 var changes = [];
 
-console.log(`Initial State: ${initState}`);
+// console.log(`Initial State: ${initState}`);
 
 const rules = contents.slice(2)
                 .map(v => {
@@ -32,23 +32,25 @@ rules.forEach(r => {
     liveTbl[num] = r.output;
 });
 
+for (k = 0; k < 1; k++){
 // console.log(rules[3]);
-for (i=2; i<initState.length-2;i++){
-    // string to match
-    // console.log(`TO MATCH: ${initState[i-2]},${initState[i-1]},${initState[i]},${initState[i+1]},${initState[i+2]}`);
-    var temp = initState[i-2]+','+initState[i-1]+','+initState[i]+','+initState[i+1]+','+initState[i+2];
-    // console.log(temp);
-    //look through rules
-    for (j = 0; j < rules.length; j++){
-        // var tempRule = rules[j].toString()
-        if (temp == rules[j].match.toString()){
-            // console.log(`${JSON.stringify(rules[j],undefined,2)}`);
-            changedState[i] = rules[j].output;
-            // console.log(`Init State: ${initState}`);
-            console.log(`change state: ${changedState}`);
+    for (i=2; i<changedState.length-2;i++){
+        // string to match
+        // console.log(`TO MATCH: ${initState[i-2]},${initState[i-1]},${initState[i]},${initState[i+1]},${initState[i+2]}`);
+        var temp = changedState[i-2]+','+changedState[i-1]+','+changedState[i]+','+changedState[i+1]+','+changedState[i+2];
+        // console.log(temp);
+        //look through rules
+        for (j = 0; j < rules.length; j++){
+            // var tempRule = rules[j].toString()
+            if (temp == rules[j].match.toString()){
+                // console.log(`${JSON.stringify(rules[j],undefined,2)}`);
+                changedState[i] = rules[j].output;
+                // console.log(`Init State: ${initState}`);
+                // console.log(`${changedState}`);
+            }
         }
     }
 }
 
-console.log(`Init: ${initState}`);
+// console.log(`Init: ${initState}`);
 console.log(`Curr: ${changedState}`);
