@@ -5,6 +5,7 @@ var contents = fs.readFileSync('./input_test.txt', 'utf8').toString().split('\r\
 var initState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
 // var initState = contents[0].replace('initial state: ','').split('');
 var changedState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
+var tempState = contents[0].replace('initial state: ','').split('').map((s) => s === '#' ? 1 : 0);
 var changes = [];
 
 // console.log(`Initial State: ${initState}`);
@@ -32,7 +33,7 @@ rules.forEach(r => {
     liveTbl[num] = r.output;
 });
 
-for (k = 0; k < 1; k++){
+for (k = 0; k < 20; k++){
 // console.log(rules[3]);
     for (i=2; i<changedState.length-2;i++){
         // string to match
@@ -44,13 +45,15 @@ for (k = 0; k < 1; k++){
             // var tempRule = rules[j].toString()
             if (temp == rules[j].match.toString()){
                 // console.log(`${JSON.stringify(rules[j],undefined,2)}`);
-                changedState[i] = rules[j].output;
+                tempState[i] = rules[j].output;
                 // console.log(`Init State: ${initState}`);
                 // console.log(`${changedState}`);
             }
         }
     }
+    changedState = tempState.toString().split();
+    console.log(`Curr: ${changedState}`);
 }
 
-// console.log(`Init: ${initState}`);
+console.log(`Init: ${initState}`);
 console.log(`Curr: ${changedState}`);
